@@ -1,0 +1,239 @@
+﻿/*Code Attribution for css styling
+Links: <https://github.com/Dentistkiller/CSS>
+       <https://html.com/> */
+/* login.css - GLMS Login Page Styles */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: #f4f6f9;
+    color: #2c3e50;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* ── Left branding panel ── */
+.login-panel-left {
+    background-color: #1a2b4a;
+    border-right: 3px solid #1a6fc4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+    .login-panel-left::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        border: 70px solid rgba(26, 111, 196, 0.12);
+        pointer-events: none;
+    }
+
+    .login-panel-left::after {
+        content: '';
+        position: absolute;
+        bottom: -70px;
+        left: -70px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        border: 50px solid rgba(26, 111, 196, 0.08);
+        pointer-events: none;
+    }
+
+.login-brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+    .login-brand:hover {
+        color: #7ec8f7;
+    }
+
+.login-tagline {
+    position: relative;
+    z-index: 1;
+}
+
+    .login-tagline h1 {
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        font-weight: 600;
+        line-height: 1.2;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        border-left: 4px solid #1a6fc4;
+        padding-left: 1rem;
+    }
+
+    .login-tagline p {
+        color: #b0c4de;
+        font-size: 0.9rem;
+        line-height: 1.7;
+        max-width: 30ch;
+        padding-left: 1rem;
+    }
+
+.login-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.login-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #b0c4de;
+    font-size: 0.85rem;
+}
+
+    .login-feature-item::before {
+        content: '✓';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        background: #1a6fc4;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+.login-panel-footer {
+    font-size: 0.75rem;
+    color: #3a4a5e;
+    letter-spacing: 0.04em;
+}
+
+/* ── Right form panel ── */
+.login-panel-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background-color: #f4f6f9;
+}
+
+.login-form-box {
+    width: 100%;
+    max-width: 400px;
+}
+
+    .login-form-box h2 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #1a2b4a;
+        margin-bottom: 0.3rem;
+    }
+
+.login-subtitle {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+}
+
+/* Error alert - matches site.css alert style */
+.login-alert-error {
+    background-color: #fee2e2;
+    border-left: 4px solid #dc3545;
+    color: #991b1b;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Card wrapping the form */
+.login-card {
+    background: #ffffff;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    padding: 2rem;
+    margin-bottom: 1rem;
+}
+
+.login-form-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #1a2b4a;
+    margin-bottom: 0.3rem;
+}
+
+.login-form-control {
+    width: 100%;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #cdd5e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #2c3e50;
+    background-color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    margin-bottom: 1.2rem;
+}
+
+    .login-form-control:focus {
+        border-color: #1a6fc4;
+        box-shadow: 0 0 0 3px rgba(26, 111, 196, 0.15);
+    }
+
+.login-btn {
+    width: 100%;
+    padding: 0.55rem 1.1rem;
+    background-color: #1a6fc4;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    margin-top: 0.25rem;
+}
+
+    .login-btn:hover {
+        background-color: #155da0;
+        box-shadow: 0 2px 8px rgba(26, 111, 196, 0.35);
+    }
+
+    .login-btn:active {
+        transform: scale(0.99);
+    }
+
+@media (max-width: 700px) {
+    body {
+        grid-template-columns: 1fr;
+    }
+
+    .login-panel-left {
+        display: none;
+    }
+
+    .login-panel-right {
+        padding: 2rem 1.5rem;
+    }
+}

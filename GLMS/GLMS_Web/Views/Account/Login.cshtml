@@ -1,0 +1,75 @@
+@model GLMS_Web.ApiServices.LoginRequest
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLMS — Sign In</title>
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- Left branding panel -->
+    <div class="login-panel-left">
+
+        <a asp-controller="Home" asp-action="Index" class="login-brand">G L M S</a>
+
+        <div class="login-tagline">
+            <h1>Global Logistics Management System</h1>
+            <p>Manage contracts, service requests, and client relationships from a single enterprise hub.</p>
+        </div>
+
+        <div class="login-features">
+            <div class="login-feature-item">Contract Management & Status Tracking</div>
+            <div class="login-feature-item">Service Request Processing</div>
+            <div class="login-feature-item">International Currency Conversion</div>
+            <div class="login-feature-item">Role-Based Access Control</div>
+        </div>
+
+        <div class="login-panel-footer">© 2026 TechMove Logistics · All rights reserved</div>
+
+    </div>
+
+    <!-- Right form panel -->
+    <div class="login-panel-right">
+        <div class="login-form-box">
+
+            <h2>Sign In</h2>
+            <p class="login-subtitle">Enter your credentials to access the platform</p>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="login-alert-error">@ViewBag.Error</div>
+            }
+
+            <div class="login-card">
+                <form asp-action="Login" method="post">
+
+                    <label class="login-form-label">Username</label>
+                    <input asp-for="Username"
+                           class="login-form-control"
+                           placeholder="Enter your username"
+                           autocomplete="username" />
+
+                    <label class="login-form-label">Password</label>
+                    <input asp-for="Password"
+                           type="password"
+                           class="login-form-control"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" />
+
+                    <button type="submit" class="login-btn">Sign In</button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

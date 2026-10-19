@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GLMS_API/GLMS_API.csproj" Id="010270f9-124d-42e7-b6f8-5cb535ffc496" />
+  <Project Path="GLMS_Web/GLMS_Web.csproj" />
+  <Project Path="GLMS_Tests/GLMS_Tests.csproj" Id="bb272c91-f336-4ace-99ca-bf6def239482" />
+</Solution>

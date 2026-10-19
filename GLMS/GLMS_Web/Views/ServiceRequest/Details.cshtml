@@ -1,0 +1,56 @@
+@model GLMS_Web.Models.ServiceRequest
+
+@{
+    ViewData["Title"] = "Service Request Details";
+
+    var role = Context.Session.GetString("UserRole");
+    var backAction = role == "Client" ? "MyServiceRequests" : "Index";
+
+    var badgeCss = Model.Status switch
+    {
+        "Pending" => "status-draft",
+        "In Progress" => "status-onhold",
+        "Completed" => "status-active",
+        "Cancelled" => "status-expired",
+        _ => "status-draft"
+    };
+}
+
+<div class="page-header">
+    <h1>Service Request Details</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Service Request</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Description</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
+
+                    <dt class="col-sm-4">Cost</dt>
+                    <dd class="col-sm-8">R @Model.Cost.ToString("N2")</dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @badgeCss">@Model.Status</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Contract</dt>
+                    <dd class="col-sm-8">
+                        @Model.Contract?.Client?.FirstName @Model.Contract?.Client?.Surname - @Model.Contract?.ServiceLevel
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            @if (role == "Admin")
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            }
+            <a asp-action="@backAction" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

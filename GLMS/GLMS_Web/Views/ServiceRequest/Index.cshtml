@@ -1,0 +1,97 @@
+@model IEnumerable<GLMS_Web.Models.ServiceRequest>
+@{
+	ViewData["Title"] = "Service Requests";
+	var role = Context.Session.GetString("UserRole");
+}
+
+<div class="page-header">
+	<h1>Service Requests</h1>
+	@if (role == "Admin")
+	{
+		<a asp-action="Create" class="btn btn-primary">+ New Service Request</a>
+	}
+</div>
+
+@if (TempData["ObserverNotifications"] != null)
+{
+	var notes = System.Text.Json.JsonSerializer
+		.Deserialize<List<string>>(TempData["ObserverNotifications"]!.ToString()!);
+	<div class="alert alert-info alert-dismissible fade show" role="alert">
+		<strong>Notification:</strong>
+		<ul class="mb-0 mt-1">
+			@foreach (var note in notes!)
+			{
+				<li>@note</li>
+			}
+		</ul>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+	</div>
+}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Description</th>
+			<th>Cost</th>
+			<th>Status</th>
+			<th>Contract</th>
+			<th class="text-end">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (!Model.Any())
+		{
+			<tr>
+				<td colspan="5" class="text-center text-muted py-4">No service requests found.</td>
+			</tr>
+		}
+		else
+		{
+			@foreach (var item in Model)
+			{
+				var badgeCss = item.Status switch
+				{
+					"Pending" => "status-draft",
+					"In Progress" => "status-onhold",
+					"Completed" => "status-active",
+					"Cancelled" => "status-expired",
+					_ => "status-draft"
+				};
+				<tr>
+					<td>@Html.DisplayFor(modelItem => item.Description)</td>
+					<td>R @item.Cost.ToString("N2")</td>
+					<td>
+						<span class="badge @badgeCss">@item.Status</span>
+					</td>
+					<td>
+						@item.Contract?.Client?.FirstName @item.Contract?.Client?.Surname - @item.Contract?.ServiceLevel
+					</td>
+					<td class="text-end">
+						<div class="dropdown position-static">
+							<button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Actions
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end">
+								@if (role == "Admin")
+								{
+									<li>
+										<a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+									</li>
+								}
+								<li>
+									<a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a>
+								</li>
+								@if (role == "Admin")
+								{
+									<li>
+										<a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+									</li>
+								}
+							</ul>
+						</div>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>

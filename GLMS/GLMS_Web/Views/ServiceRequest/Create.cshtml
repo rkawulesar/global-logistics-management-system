@@ -1,0 +1,112 @@
+@model GLMS_Web.Models.ServiceRequest
+
+@{
+	ViewData["Title"] = "Create Service Request";
+}
+
+<div class="page-header">
+	<h1>Create Service Request</h1>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header">Service Request Information</div>
+			<div class="card-body">
+				<form asp-action="Create">
+					<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+					<div class="mb-3">
+						<label asp-for="ContractId" class="form-label">Contract</label>
+						<select asp-for="ContractId" class="form-select" asp-items="ViewBag.ContractId">
+							<option value="">-- Select Contract --</option>
+						</select>
+						<span asp-validation-for="ContractId" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Description" class="form-label">Description</label>
+						<input asp-for="Description" class="form-control" />
+						<span asp-validation-for="Description" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="UsdAmount" class="form-label">Amount (USD)</label>
+						<input asp-for="UsdAmount" class="form-control" id="usdAmount" type="number" step="0.01" />
+						<span asp-validation-for="UsdAmount" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Cost" class="form-label">Cost (ZAR)</label>
+						<input asp-for="Cost" class="form-control" id="zarCost" type="number" step="0.01" readonly />
+						<span asp-validation-for="Cost" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Status" class="form-label">Status</label>
+						<select asp-for="Status" class="form-select">
+							<option value="">-- Select Status --</option>
+							<option value="Pending">Pending</option>
+							<option value="In Progress">In Progress</option>
+							<option value="Completed">Completed</option>
+							<option value="Cancelled">Cancelled</option>
+						</select>
+						<span asp-validation-for="Status" class="text-danger"></span>
+					</div>
+
+					<div class="d-flex gap-2 mt-3">
+						<input type="submit" value="Create" class="btn btn-primary" />
+						<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	@* 
+    Code Attribution for Fetch API, JSON handling and currency conversion logic
+	Links:
+	https://reqbin.com/code/javascript/wc3qbk0b/javascript-fetch-json-example
+	https://dev.to/dev_london/build-a-live-currency-converter-with-plain-js-42o2
+	https://dev.to/martinbaldwin127/unlocking-global-transactions-a-guide-to-the-best-currency-exchange-free-api-for-developers-4n6f
+	 *@
+	<script>
+			document.addEventListener("DOMContentLoaded", async function () {
+			const usdInput = document.getElementById("usdAmount");
+			const zarInput = document.getElementById("zarCost");
+			if (!usdInput || !zarInput) return;
+
+			let exchangeRate = null;
+
+			try {
+				const response = await fetch('/ServiceRequest/GetUsdToZarRate');
+				if (response.ok) exchangeRate = await response.json();
+			} catch { }
+
+			usdInput.addEventListener("input", function () {
+				const usdValue = parseFloat(usdInput.value);
+				if (isNaN(usdValue) || usdValue <= 0 || !exchangeRate) {
+					zarInput.value = "";
+					return;
+				}
+				zarInput.value = (usdValue * exchangeRate).toFixed(2);
+			});
+		});
+	</script>
+
+
+	<script>
+		document.getElementById("ContractId").addEventListener("change", function () {
+			var selectedText = this.options[this.selectedIndex].text;
+
+			if (selectedText.includes("Expired") || selectedText.includes("On Hold") || selectedText.includes("Draft")) {
+				alert("You cannot create a service request for this contract.");
+			}
+		});
+	</script>
+}

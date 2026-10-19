@@ -1,0 +1,53 @@
+@model IEnumerable<GLMS_Web.Models.Client>
+
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="page-header">
+    <h1>Clients</h1>
+    <a asp-action="Create" class="btn btn-primary">+ New Client</a>
+</div>
+@if (TempData["LoginDetails"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Client login created successfully.</strong><br />
+
+        @TempData["LoginDetails"]
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Region</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FirstName @item.Surname</td>
+                <td>@item.Email</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.Region</td>
+                <td class="text-end">
+                    <div class="dropdown position-static">
+                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a></li>
+                            <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a></li>
+                            <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

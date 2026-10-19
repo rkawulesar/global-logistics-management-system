@@ -1,0 +1,115 @@
+@model GLMS_Web.Models.Contract
+
+@{
+	ViewData["Title"] = "Create Contract";
+	var role = Context.Session.GetString("UserRole");
+}
+
+<div class="page-header">
+	<h1>Create Contract</h1>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header">Contract Information</div>
+			<div class="card-body">
+				<form asp-action="Create" enctype="multipart/form-data">
+
+					@if (role == "Admin")
+					{
+						<div class="form-group mb-3">
+							<label asp-for="ClientId" class="form-label">Client</label>
+
+							<select asp-for="ClientId"
+									class="form-select"
+									asp-items="ViewBag.ClientId">
+							</select>
+						</div>
+					}
+
+					<div class="mb-3">
+						<label asp-for="StartDate" class="form-label">Start Date</label>
+						<input asp-for="StartDate" type="date" class="form-control" />
+						<span asp-validation-for="StartDate" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="EndDate" class="form-label">End Date</label>
+						<input asp-for="EndDate" type="date" class="form-control" />
+						<span asp-validation-for="EndDate" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Status" class="form-label">Status</label>
+						<select asp-for="Status" class="form-select">
+							<option value="">-- Select Status --</option>
+							<option value="Draft">Draft</option>
+							<option value="Active">Active</option>
+							<option value="Expired">Expired</option>
+							<option value="On Hold">On Hold</option>
+						</select>
+						<span asp-validation-for="Status" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ServiceLevel" class="form-label">Service Level</label>
+						<select asp-for="ServiceLevel" class="form-select">
+							<option value="">-- Select Service Level --</option>
+							<option value="Standard">Standard</option>
+							<option value="Express">Express</option>
+							<option value="Premium">Premium</option>
+						</select>
+						<span asp-validation-for="ServiceLevel" class="text-danger"></span>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Signed Agreement (PDF)</label>
+						<input type="file" name="pdfFile" class="form-control" accept=".pdf" />
+						<span asp-validation-for="FilePath" class="text-danger"></span>
+					</div>
+
+					<div class="d-flex gap-2 mt-3">
+
+						<input type="submit"
+							   value="Create"
+							   class="btn btn-primary" />
+
+						@if (role == "Client")
+						{
+							<a asp-action="MyContracts" class="btn btn-secondary">Back to List
+							</a>
+						}
+						else
+						{
+							<a asp-action="Index" class="btn btn-secondary"> Back to List
+							</a>
+						}
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	@* Prevents selecting an EndDate earlier than StartDate *@
+	<script>
+			const startDateInput = document.getElementById("StartDate");
+			const endDateInput = document.getElementById("EndDate");
+
+			startDateInput.addEventListener("change", function () {
+				endDateInput.min = startDateInput.value;
+
+		// Clears invalid EndDate if already selected
+
+				if (endDateInput.value && endDateInput.value < startDateInput.value) {
+					endDateInput.value = "";
+				}
+			});
+	</script>
+}

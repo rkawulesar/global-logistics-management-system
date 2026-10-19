@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+*.user
+*.log
+**/wwwroot/files/*.pdf
+**/GLMS_API/wwwroot/files/
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key

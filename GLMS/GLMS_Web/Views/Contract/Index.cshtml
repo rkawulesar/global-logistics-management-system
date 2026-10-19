@@ -1,0 +1,145 @@
+@model IEnumerable<GLMS_Web.Models.Contract>
+@{
+    ViewData["Title"] = "Contracts";
+    var role = Context.Session.GetString("UserRole");
+    var indexAction = role == "Client" ? "MyContracts" : "Index";
+}
+
+<div class="page-header">
+    <h1>Contracts</h1>
+    <a asp-action="Create" class="btn btn-primary">+ New Contract</a>
+</div>
+
+<form asp-action="@indexAction" method="get" class="card p-3 mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="Draft" selected="@(ViewBag.Status == "Draft")">Draft</option>
+                <option value="Active" selected="@(ViewBag.Status == "Active")">Active</option>
+                <option value="Expired" selected="@(ViewBag.Status == "Expired")">Expired</option>
+                <option value="On Hold" selected="@(ViewBag.Status == "On Hold")">On Hold</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Start Date From</label>
+            <input type="date" name="startDate" value="@ViewBag.StartDate" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">End Date To</label>
+            <input type="date" name="endDate" value="@ViewBag.EndDate" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Service Level</label>
+            <select name="serviceLevel" class="form-select">
+                <option value="">All Levels</option>
+                <option value="Standard" selected="@(ViewBag.ServiceLevel == "Standard")">Standard</option>
+                <option value="Express" selected="@(ViewBag.ServiceLevel == "Express")">Express</option>
+                <option value="Premium" selected="@(ViewBag.ServiceLevel == "Premium")">Premium</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a asp-action="@indexAction" class="btn btn-secondary">Clear</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Service Level</th>
+            <th>Client</th>
+            <th>Signed Agreement</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="7" class="text-center text-muted py-4">No contracts found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                var badgeCss = item.Status switch
+                {
+                    "Active" => "status-active",
+                    "Expired" => "status-expired",
+                    "On Hold" => "status-onhold",
+                    _ => "status-draft"
+                };
+                <tr>
+                    <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <span class="badge @badgeCss">@item.Status</span>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.ServiceLevel)</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.FirstName)
+                        @Html.DisplayFor(modelItem => item.Client.Surname)
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.FilePath))
+                        {
+                            <a href="@(ViewBag.ApiBaseUrl + item.FilePath)" target="_blank" class="btn btn-sm btn-secondary">View PDF</a>
+                            <a href="@(ViewBag.ApiBaseUrl + "/api/Contracts/download/" + System.IO.Path.GetFileName(item.FilePath))"
+                               class="btn btn-sm btn-success">
+                                Download
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No file</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <div class="dropdown position-static">
+                            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id">
+                                        Edit
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id">
+                                        Details
+                                    </a>
+                                </li>
+
+                                @if (role == "Admin")
+                                {
+                                    <li>
+                                        <a class="dropdown-item text-danger"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id">
+                                            Delete
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,68 @@
+@model GLMS_Web.Models.Contract
+
+@{
+    ViewData["Title"] = "Contract Details";
+
+    var role = Context.Session.GetString("UserRole");
+    var backAction = role == "Client" ? "MyContracts" : "Index";
+
+    var badgeCss = Model.Status switch
+    {
+        "Active" => "status-active",
+        "Expired" => "status-expired",
+        "On Hold" => "status-onhold",
+        _ => "status-draft"
+    };
+}
+
+<div class="page-header">
+    <h1>Contract Details</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Contract</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Client</dt>
+                    <dd class="col-sm-8">
+                        @Model.Client?.FirstName @Model.Client?.Surname
+                    </dd>
+
+                    <dt class="col-sm-4">Start Date</dt>
+                    <dd class="col-sm-8">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">End Date</dt>
+                    <dd class="col-sm-8">@Model.EndDate.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @badgeCss">@Model.Status</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Service Level</dt>
+                    <dd class="col-sm-8">@Model.ServiceLevel</dd>
+
+                    <dt class="col-sm-4">Signed Agreement</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.FilePath))
+                        {
+                            <a href="@(ViewBag.ApiBaseUrl + Model.FilePath)" target="_blank" class="btn btn-sm btn-secondary">View PDF</a>
+                            <a href="@(ViewBag.ApiBaseUrl + Model.FilePath)" download class="btn btn-sm btn-success">Download</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No file uploaded</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="@backAction" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
